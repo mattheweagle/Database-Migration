@@ -3,6 +3,7 @@ from flask_pymongo import PyMongo
 from pymongo import MongoClient
 from flask_restful import Api
 from databases.mongo import mongo
+import config
 
 #import API functions for routing
 from calls.review import BusinessReviewsAbove, BusinessReviews, GetReview, AddReview, UpdateReview, DeleteReview
@@ -10,7 +11,7 @@ from calls.business import GetBusiness,AddBusiness,UpdateBusiness,TopBusinessCit
 from calls.user import GetUser,AddUser,UpdateUser,DeleteUser
 from calls.checkin import GetCheckin, AddCheckin
 from calls.tip import GetTips
-from calls.migrate import addDeletedTags, BusinessMigration, CheckinMigration, ReviewMigration, TipMigration, UserMigration
+from calls.migrate import addDeletedTags, BusinessMigration, CheckinMigration, ReviewMigration, TipMigration, UserMigration, UpdateConfig
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = config.mongoConfig['URI']
@@ -62,3 +63,4 @@ api.add_resource(CheckinMigration, '/migration/checkin/<int:pageNum>')
 api.add_resource(ReviewMigration, '/migration/review/<int:pageNum>')
 api.add_resource(TipMigration, '/migration/tip/<int:pageNum>')
 api.add_resource(UserMigration, '/migration/user/<int:pageNum>')
+api.add_resource(UpdateConfig, '/migration/config')

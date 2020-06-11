@@ -12,7 +12,6 @@ class GetBusiness(Resource):
 
 		if(business):
 			result = {
-				"_id": business._id,
 				"address": business.address,
 				"attributes": business.business_attributes,
 				"business_id": business.business_id,
@@ -43,7 +42,6 @@ class AddBusiness(Resource):
 			and 'postal_code' in business_json and 'stars' in business_json and 'address' in business_json and 'latitude' in business_json
 			and 'is_open' in business_json and 'attributes' in business_json and 'categories' in business_json and 'deleted' in business_json):
 			new_business = Business(
-				_id = business_json['_id'],
 				address = business_json['address'],
 				business_attributes = business_json['attributes'],
 				business_id = business_json['business_id'],
@@ -125,7 +123,6 @@ class TopBusinessCity(Resource):
 					bestBusiness = business
 
 			result = {
-				"_id": bestBusiness._id,
 				"address": bestBusiness.address,
 				"attributes": bestBusiness.business_attributes,
 				"business_id": bestBusiness.business_id,

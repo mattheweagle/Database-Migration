@@ -11,7 +11,6 @@ class GetTips(Resource):
         tips = Tip.query.filter_by(business_id=business_id,deleted=False).all()
         results = [
             {
-                "_id": tip._id,
                 "business_id": tip.business_id,
                 "compliment_count": tip.compliment_count,
                 "date": tip.date,

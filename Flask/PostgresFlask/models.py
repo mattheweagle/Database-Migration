@@ -3,11 +3,10 @@ from app import postgres
 class Business(postgres.Model):
 	__tablename__ = 'Businesses'
 
-	_id = postgres.Column(postgres.String(), primary_key=True)
+	business_id = postgres.Column(postgres.String(), primary_key=True)
 	city = postgres.Column(postgres.String())
 	review_count = postgres.Column(postgres.Integer())
-	business_name = postgres.Column(postgres.String())
-	business_id = postgres.Column(postgres.String())
+	business_name = postgres.Column(postgres.String(), primary_key=True)
 	longitude = postgres.Column(postgres.Numeric())
 	hours = postgres.Column(postgres.JSON())
 	business_state = postgres.Column(postgres.String())
@@ -20,8 +19,7 @@ class Business(postgres.Model):
 	categories = postgres.Column(postgres.String())
 	deleted = postgres.Column(postgres.Boolean())
 
-	def __init__(self, _id, city, review_count, business_name, business_id, longitude, hours, business_state, postal_code, stars, address, latitude, is_open, business_attributes, categories, deleted):
-		self._id = _id
+	def __init__(self, city, review_count, business_name, business_id, longitude, hours, business_state, postal_code, stars, address, latitude, is_open, business_attributes, categories, deleted):
 		self.city = city
 		self.review_count = review_count
 		self.business_name = business_name
@@ -39,11 +37,11 @@ class Business(postgres.Model):
 		self.deleted = deleted
 
 	def __repr__(self):
-		return '<_id {}>'.format(self._id)
+		return '<business_id {}>'.format(self.business_id)
 
 	def serialize(self):
 		return {
-			'_id': self._id,
+			'business_id': self.business_id,
 			'business_name': self.business_name,
 			'stars': self.stars,
 			'business_attributes':self.business_attributes
@@ -52,31 +50,28 @@ class Business(postgres.Model):
 class Checkin(postgres.Model):
 	__tablename__ = 'Checkins'
 
-	_id = postgres.Column(postgres.String(), primary_key=True)
 	date = postgres.Column(postgres.String())
-	business_id = postgres.Column(postgres.String())
+	business_id = postgres.Column(postgres.String(), primary_key=True)
 
-	def __init__(self, _id, date, business_id):
-		self._id = _id
+	def __init__(self, date, business_id):
 		self.date = date
 		self.business_id = business_id
 
 
 	def __repr__(self):
-		return '<_id {}>'.format(self._id)
+		return '<business_id {}>'.format(self.business_id)
 
 	def serialize(self):
 		return {
-			'_id': self._id,
+			'business_id': self.business_id,
 		}
 
 class Review(postgres.Model):
 	__tablename__ = 'Reviews'
 
-	_id = postgres.Column(postgres.String(), primary_key=True)
 	funny = postgres.Column(postgres.Integer())
 	useful = postgres.Column(postgres.Integer())
-	review_id = postgres.Column(postgres.String())
+	review_id = postgres.Column(postgres.String(), primary_key=True)
 	text = postgres.Column(postgres.String())
 	business_id = postgres.Column(postgres.String())
 	stars = postgres.Column(postgres.Integer())
@@ -85,8 +80,7 @@ class Review(postgres.Model):
 	cool = postgres.Column(postgres.Integer())
 	deleted = postgres.Column(postgres.Boolean())
 
-	def __init__(self, _id, funny, useful, review_id, text, business_id, stars, date, user_id, cool, deleted):
-		self._id = _id
+	def __init__(self, funny, useful, review_id, text, business_id, stars, date, user_id, cool, deleted):
 		self.funny = funny
 		self.useful = useful
 		self.review_id = review_id
@@ -99,26 +93,24 @@ class Review(postgres.Model):
 		self.deleted = deleted
 
 	def __repr__(self):
-		return '<_id {}>'.format(self._id)
+		return '<review_id {}>'.format(self.review_id)
 
 	def serialize(self):
 		return {
-			'_id': self._id,
+			'review_id': self.review_id,
 		}
 
 class Tip(postgres.Model):
 	__tablename__ = 'Tips'
 
-	_id = postgres.Column(postgres.String(), primary_key=True)
-	user_id = postgres.Column(postgres.String())
+	user_id = postgres.Column(postgres.String(), primary_key=True)
 	text = postgres.Column(postgres.String())
 	business_id = postgres.Column(postgres.String())
 	compliment_count = postgres.Column(postgres.Integer())
-	date = postgres.Column(postgres.String())
+	date = postgres.Column(postgres.String(), primary_key=True)
 	deleted = postgres.Column(postgres.Boolean())
 
 	def __init__(self, _id, user_id, text, business_id, compliment_count, date, deleted):
-		self._id = _id
 		self.user_id = user_id
 		self.text = text
 		self.business_id = business_id
@@ -127,17 +119,16 @@ class Tip(postgres.Model):
 		self.deleted = deleted
 
 	def __repr__(self):
-		return '<_id {}>'.format(self._id)
+		return '<user_id {}>'.format(self.user_id)
 
 	def serialize(self):
 		return {
-			'_id': self._id,
+			'user_id': self.user_id,
 		}
 
 class User(postgres.Model):
 	__tablename__ = 'Users'
 
-	_id = postgres.Column(postgres.String(), primary_key=True)
 	yelping_since = postgres.Column(postgres.String())
 	useful = postgres.Column(postgres.Integer())
 	compliment_photos = postgres.Column(postgres.Integer())
@@ -152,7 +143,7 @@ class User(postgres.Model):
 	compliment_writer = postgres.Column(postgres.Integer())
 	compliment_cute = postgres.Column(postgres.Integer())
 	average_stars = postgres.Column(postgres.Numeric())
-	user_id = postgres.Column(postgres.String())
+	user_id = postgres.Column(postgres.String(), primary_key=True)
 	compliment_more = postgres.Column(postgres.Integer())
 	friends = postgres.Column(postgres.String())
 	compliment_hot = postgres.Column(postgres.Integer())
@@ -163,7 +154,6 @@ class User(postgres.Model):
 	deleted = postgres.Column(postgres.Boolean())
 
 	def __init__(self, _id, yelping_since, useful, compliment_photos,compliment_list, compliment_funny, funny, review_count, elite, fans, compliment_note,compliment_plain,compliment_writer,compliment_cute,average_stars,user_id,compliment_more,friends,compliment_hot,cool,name,compliment_profile,compliment_cool,deleted):
-		self._id = _id
 		self.yelping_since = yelping_since
 		self.useful = useful
 		self.compliment_photos = compliment_photos
@@ -189,9 +179,9 @@ class User(postgres.Model):
 		self.deleted = deleted
 
 	def __repr__(self):
-		return '<_id {}>'.format(self._id)
+		return '<user_id {}>'.format(self.user_id)
 
 	def serialize(self):
 		return {
-			'_id': self._id,
+			'user_id': self.user_id,
 		}

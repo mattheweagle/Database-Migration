@@ -12,7 +12,6 @@ class BusinessMigration(Resource):
             json_data = json.loads('{' + singleBusiness + '}')
             try:
                 business=Business(
-                    _id = json_data['_id'],
                     city = json_data['city'],
                     review_count = json_data['review_count'],
                     business_name = json_data['name'],
@@ -43,7 +42,6 @@ class CheckinMigration(Resource):
             json_data = json.loads('{' + singleCheckin + '}')
             try:
                 checkin=Checkin(
-                    _id = json_data['_id'],
                     date = json_data['date'],
                     business_id = json_data['business_id']
                 )
@@ -61,7 +59,6 @@ class ReviewMigration(Resource):
             json_data = json.loads('{' + singleReview + '}')
             try:
                 review=Review(
-                    _id = json_data['_id'],
                     funny = json_data['funny'],
                     useful = json_data['useful'],
                     review_id = json_data['review_id'],
@@ -88,7 +85,6 @@ class TipMigration(Resource):
             json_data = json.loads('{' + singleTip + '}')
             try:
                 tip=Tip(
-                    _id = json_data['_id'],
                     user_id = json_data['user_id'],
                     text = json_data['text'],
                     business_id = json_data['business_id'],
@@ -110,7 +106,6 @@ class UserMigration(Resource):
             json_data = json.loads('{' + singleUser + '}')
             try:
                 user=User(
-                    _id = json_data['_id'],
                     yelping_since = json_data['yelping_since'],
                     useful = json_data['useful'],
                     compliment_photos = json_data['compliment_photos'],

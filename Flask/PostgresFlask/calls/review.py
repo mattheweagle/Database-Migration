@@ -11,7 +11,6 @@ class GetReview(Resource):
 
 		if(review):
 			result = {
-				  "_id": review._id,
 				  "business_id": review.business_id,
 				  "cool": review.cool,
 				  "date": review.date,
@@ -36,7 +35,6 @@ class AddReview(Resource):
 			and 'business_id' in review_json and 'stars' in review_json and 'date' in review_json
 			and 'user_id' in review_json and 'cool' in review_json and 'deleted' in review_json):
 			new_review = Review(
-				_id = review_json['_id'],
 				business_id = review_json['business_id'],
 				cool = review_json['cool'],
 				deleted = review_json['deleted'],
@@ -65,7 +63,6 @@ class UpdateReview(Resource):
 			review = Review.query.filter_by(review_id=review_id,deleted=False).first()
 
 			if(review):
-				review._id = review_json['_id']
 				review.business_id = review_json['business_id']
 				review.cool = review_json['cool']
 				review.deleted = review_json['deleted']
@@ -102,7 +99,6 @@ class BusinessReviews(Resource):
 		if(len(reviews) > 0):
 			results = [
 				{
-					  "_id": review._id,
 					  "business_id": review.business_id,
 					  "cool": review.cool,
 					  "date": review.date,
@@ -124,7 +120,6 @@ class BusinessReviewsAbove(Resource):
 		if(len(reviews) > 0):
 			results = [
 				{
-					  "_id": review._id,
 					  "business_id": review.business_id,
 					  "cool": review.cool,
 					  "date": review.date,

@@ -11,7 +11,6 @@ class GetUser(Resource):
 
 		if(user):
 			result = {
-				"_id": user._id,
 				"average_stars": float(user.average_stars),
 				"compliment_cool": user.compliment_cool,
 				"compliment_cute": user.compliment_cute,
@@ -52,7 +51,6 @@ class AddUser(Resource):
 			and 'friends' in user_json and 'compliment_hot' in user_json and 'cool' in user_json and 'name' in user_json
 			and 'compliment_profile' in user_json and 'compliment_cool' in user_json and 'deleted' in user_json):
 			new_user = User(
-				_id = user_json['_id'],
 				yelping_since = user_json['yelping_since'],
 				useful = user_json['useful'],
 				compliment_photos = user_json['compliment_photos'],

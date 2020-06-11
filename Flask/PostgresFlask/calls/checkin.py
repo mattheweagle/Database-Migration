@@ -12,7 +12,6 @@ class GetCheckin(Resource):
 
         if(checkin):
             result = {
-                "_id": checkin._id,
                 "business_id": checkin.business_id,
                 "date": checkin.date
             }

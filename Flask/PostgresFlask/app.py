@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from databases.postgres import postgres
+import config
 
 #import API functions for routing
 from calls.review import BusinessReviewsAbove, BusinessReviews, GetReview, AddReview, UpdateReview, DeleteReview

@@ -18,7 +18,7 @@ def MigrateBusinesses(pageNum):
 		t1 = time.time()
 		if g.status_code == 200:
 			print(t1 - t0)
-			p = requests.post('http://localhost:80/migrate/business',data=json.dumps(g.text))
+			p = requests.post('http://localhost:80/migration/business',data=json.dumps(g.text))
 			print(time.time() - t1)
 			pageNum = pageNum + 1
 		elif g.status_code == 400:
@@ -45,7 +45,7 @@ def MigrateCheckins(pageNum):
 		if g.status_code == 400:
 			break;
 		print(t1 - t0)
-		p = requests.post('http://localhost:80/migrate/checkin',data=json.dumps(g.text))
+		p = requests.post('http://localhost:80/migration/checkin',data=json.dumps(g.text))
 		print(time.time() - t1)
 		pageNum = pageNum + 1
 	MigrateReviews(0)
@@ -67,7 +67,7 @@ def MigrateReviews(pageNum):
 		if g.status_code == 400:
 			break;
 		print(t1 - t0)
-		p = requests.post('http://localhost:80/migrate/review',data=json.dumps(g.text))
+		p = requests.post('http://localhost:80/migration/review',data=json.dumps(g.text))
 		print(time.time() - t1)
 		pageNum = pageNum + 1
 	MigrateUser(0)
@@ -89,7 +89,7 @@ def MigrateUsers(pageNum):
 		if g.status_code == 400:
 			break;
 		print(t1 - t0)
-		p = requests.post('http://localhost:80/migrate/user',data=json.dumps(g.text))
+		p = requests.post('http://localhost:80/migration/user',data=json.dumps(g.text))
 		print(time.time() - t1)
 		pageNum = pageNum + 1
 	MigrateTips(0)
@@ -111,7 +111,7 @@ def MigrateTips(pageNum):
 		if g.status_code == 400:
 			break;
 		print(t1 - t0)
-		p = requests.post('http://localhost:80/migrate/tip',data=json.dumps(g.text))
+		p = requests.post('http://localhost:80/migration/tip',data=json.dumps(g.text))
 		print(time.time() - t1)
 		pageNum = pageNum + 1
 
@@ -120,7 +120,11 @@ with open ('migrationLog.txt', 'rw') as migrationLog:
 	for line in migrationLog:
 		line = line.strip()
 		lastStep = line.split(',')
+
 	lastStep[1] = int(lastStep[1])
+	#start of script. update config file with how many documents are in each collection
+	if lastStep[0] == 'business' and lastStep[1] == 0:
+		requests.post('http://localhost:5000/migration/config')
 	if lastStep[0] == 'business':
 		MigrateBusinesses(lastStep[1])
 	elif lastStep[0] == 'checkin':
