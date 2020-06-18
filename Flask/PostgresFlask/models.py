@@ -110,7 +110,7 @@ class Tip(postgres.Model):
 	date = postgres.Column(postgres.String(), primary_key=True)
 	deleted = postgres.Column(postgres.Boolean())
 
-	def __init__(self, _id, user_id, text, business_id, compliment_count, date, deleted):
+	def __init__(self, user_id, text, business_id, compliment_count, date, deleted):
 		self.user_id = user_id
 		self.text = text
 		self.business_id = business_id
@@ -153,7 +153,7 @@ class User(postgres.Model):
 	compliment_cool = postgres.Column(postgres.Integer())
 	deleted = postgres.Column(postgres.Boolean())
 
-	def __init__(self, _id, yelping_since, useful, compliment_photos,compliment_list, compliment_funny, funny, review_count, elite, fans, compliment_note,compliment_plain,compliment_writer,compliment_cute,average_stars,user_id,compliment_more,friends,compliment_hot,cool,name,compliment_profile,compliment_cool,deleted):
+	def __init__(self, yelping_since, useful, compliment_photos,compliment_list, compliment_funny, funny, review_count, elite, fans, compliment_note,compliment_plain,compliment_writer,compliment_cute,average_stars,user_id,compliment_more,friends,compliment_hot,cool,name,compliment_profile,compliment_cool,deleted):
 		self.yelping_since = yelping_since
 		self.useful = useful
 		self.compliment_photos = compliment_photos

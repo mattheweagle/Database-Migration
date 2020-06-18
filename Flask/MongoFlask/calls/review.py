@@ -36,6 +36,7 @@ class UpdateReview(Resource):
         request_text = request.get_json(force=True)
         review_json = json.loads(json.dumps(request_text))
 
+        review_json['review_id'] = review_id
         if('review_id' in review_json and 'funny' in review_json and 'useful' in review_json and 'text' in review_json
             and 'business_id' in review_json and 'stars' in review_json and 'date' in review_json
             and 'user_id' in review_json and 'cool' in review_json and 'deleted' in review_json):

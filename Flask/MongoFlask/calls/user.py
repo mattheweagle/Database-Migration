@@ -39,6 +39,7 @@ class UpdateUser(Resource):
         request_text = request.get_json(force=True)
         user_json = json.loads(json.dumps(request_text))
 
+        user_json['user_id'] = user_id
         if('yelping_since' in user_json and 'useful' in user_json and 'compliment_photos' in user_json and 'compliment_list' in user_json
             and 'compliment_funny' in user_json and 'funny' in user_json and 'review_count' in user_json
             and 'elite' in user_json and 'fans' in user_json and 'compliment_note' in user_json and 'compliment_plain' in user_json and 'compliment_writer' in user_json

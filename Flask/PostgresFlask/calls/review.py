@@ -68,7 +68,6 @@ class UpdateReview(Resource):
 				review.deleted = review_json['deleted']
 				review.date = review_json['date']
 				review.funny = review_json['funny']
-				review.review_id = review_json['review_id']
 				review.stars = review_json['stars']
 				review.text = review_json['text']
 				review.useful = review_json['useful']

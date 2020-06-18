@@ -35,8 +35,11 @@ class UpdateBusiness(Resource):
     def put(self,business_id):
         businesses = mongo.db.businesses
         request_text = request.get_json(force=True)
+        business = businesses.find_one({'business_id': business_id, 'deleted':False})
         business_json = json.loads(json.dumps(request_text))
 
+        business_json['business_id'] = business_id
+        business_json['name'] = business['name']
         if('city' in business_json and 'review_count' in business_json and 'name' in business_json and 'business_id' in business_json
             and 'longitude' in business_json and 'hours' in business_json and 'state' in business_json
             and 'postal_code' in business_json and 'stars' in business_json and 'address' in business_json and 'latitude' in business_json

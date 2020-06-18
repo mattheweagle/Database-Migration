@@ -139,4 +139,8 @@ class UpdateConfig(Resource):
 		reviews = mongo.db.reviews
 		checkins = mongo.db.checkins
 		parser.set('sizes','businessSize',str(businesses.count()))
+		parser.set('sizes','tipSize',str(tips.count()))
+		parser.set('sizes','userSize',str(users.count()))
+		parser.set('sizes','reviewSize',str(reviews.count()))
+		parser.set('sizes','checkinSize',str(checkins.count()))
 		return {}

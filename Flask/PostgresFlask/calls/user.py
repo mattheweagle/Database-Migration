@@ -109,7 +109,6 @@ class UpdateUser(Resource):
 				user.compliment_writer = user_json['compliment_writer']
 				user.compliment_cute = user_json['compliment_cute']
 				user.average_stars = user_json['average_stars']
-				user.user_id = user_json['user_id']
 				user.compliment_more = user_json['compliment_more']
 				user.friends = user_json['friends']
 				user.compliment_hot = user_json['compliment_hot']

@@ -31,7 +31,7 @@ def index():
 
 #reviews
 api.add_resource(GetReview, '/review/<string:review_id>')
-api.add_resource(AddReview, '/review')
+api.add_resource(AddReview, '/review/add')
 api.add_resource(UpdateReview, '/review/update/<string:review_id>')
 api.add_resource(DeleteReview, '/review/delete/<string:review_id>')
 api.add_resource(BusinessReviews, '/review/business/<string:businessID>')

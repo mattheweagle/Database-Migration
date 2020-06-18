@@ -78,7 +78,6 @@ class UpdateBusiness(Resource):
 			if(business):
 				business.address = business_json['address']
 				business.business_attributes = business_json['attributes']
-				business.business_id = business_json['business_id']
 				business.categories = business_json['categories']
 				business.city = business_json['city']
 				business.deleted = business_json['deleted']
@@ -86,7 +85,6 @@ class UpdateBusiness(Resource):
 				business.is_open = business_json['is_open']
 				business.latitude = business_json['latitude']
 				business.longitude = business_json['longitude']
-				business.business_name = business_json['name']
 				business.postal_code = business_json['postal_code']
 				business.review_count = business_json['review_count']
 				business.stars = business_json['stars']
