@@ -13,3 +13,15 @@ There are a lot of reasons a company might want to migrate their data from a sel
 ![Pipeline](images/pipeline.png)
 
 ## Engineering challenges
+
+Additions must be tracked to ensure a newly added entry is not migrated
+
+To fix this, the migration script automatically updates a config file which contains the sizes of each mongo collection. This way, the script knows exactly how many documents existed when migration started so it knows when to stop. The last page is limited to not include any new additions
+
+![Addition](images/addition.png)
+
+Updates and deletes happening to documents currently being transferred can't be lost
+
+Every update and delete request is logged. After migration was complete, each was ran on the new database. These logs are also crucial for verifying successful migration. Each request that was updated or deleted is checked across the two databases for differences
+
+![Update](images/update.png)
