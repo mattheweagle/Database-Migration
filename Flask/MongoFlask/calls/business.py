@@ -11,8 +11,24 @@ class GetBusiness(Resource):
         business = businesses.find_one({'business_id': business_id, 'deleted':False})
 
         if(business):
-            business['_id'] = str(business['_id'])
-            return jsonify(business)
+            result = {
+				"address": business['address'],
+				"attributes": business['attributes'],
+				"business_id": business['business_id'],
+				"categories": business['categories'],
+				"city": business['city'],
+				"deleted": business['deleted'],
+				"hours": business['hours'],
+				"is_open": business['is_open'],
+				"latitude": business['latitude'],
+				"longitude": business['longitude'],
+				"name": business['name'],
+				"postal_code": business['postal_code'],
+				"review_count": business['review_count'],
+				"stars": business['stars'],
+				"state": business['state'],
+			}
+            return result
         return "Business not found"
 
 class AddBusiness(Resource):

@@ -20,8 +20,6 @@ app.config['MONGO_DBNAME'] = config.mongoConfig['DBNAME']
 api = Api(app)
 mongo.init_app(app)
 
-print("MongoDB Database:",mongo.db)
-
 @app.route('/')
 def index():
     return "Hello World"

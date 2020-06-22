@@ -4,6 +4,7 @@ import time
 import random, string
 import datetime
 from configparser import ConfigParser
+import config
 letters = string.ascii_lowercase
 parser = ConfigParser()
 
@@ -87,12 +88,6 @@ def generateTip():
 
 with open ('requestAdds.txt', 'a') as requestAdds, open ('review_ids.csv', 'r') as review_ids, open ('user_ids.csv', 'r') as user_ids, open ('business_ids.csv', 'r') as business_ids:
 
-	#keep track of how many additions to each collection for verification after migration
-	numBusinessAdds = 0
-	numUserAdds = 0
-	numTipAdds = 0
-	numReviewAdds = 0
-
 	#load list of ids for random updates and deletions
 	#loading into memory is faster, although a different solution would be needed
 	#if there were 10x the number of ids
@@ -100,12 +95,21 @@ with open ('requestAdds.txt', 'a') as requestAdds, open ('review_ids.csv', 'r') 
 	userLines = user_ids.readlines()
 	businessLines = business_ids.readlines()
 
+	mongoHost = config.mongo['HOST']
+	postgresHost = config.postgres['HOST']
 
-	for i in range(10000):
+	while 1:
+		#simulate 25 requests per second
+		time.sleep(0.04)
+
 		requestUpdatesDeletes = open('requestUpdatesDeletes.txt', 'a')
 		parser.read('/home/ec2-user/migration/Migration/config.ini')
+
+		#keep track of how many additions to each collection for verification after migration
+		numBusinessAdds = int(parser.get('migration','numBusinessAdds'))
+		numUserAdds = int(parser.get('migration','numUserAdds'))
+		numReviewAdds = int(parser.get('migration','numReviewAdds'))
 		migrationComplete = parser.get('migration','complete')
-		print(migrationComplete)
 
 		#randomly choose to make a creation/read/update/deletion request
 		randRequest = random.random()
@@ -117,27 +121,27 @@ with open ('requestAdds.txt', 'a') as requestAdds, open ('review_ids.csv', 'r') 
 
 			#insert a review
 			if randInsert < 0.7:
-				numReviews = numReviews + 1
+				parser.set('migration','numReviewAdds',str(numReviewAdds + 1))
 				json_entry = generateReview()
 				requestAdds.write('/review/add, ' + json_entry + '\n')
-				requests.post('http://localhost:80/review/add',data=json_entry)
-				requests.post('http://localhost:5000/review/add',data=json_entry)
+				requests.post(mongoHost + '/review/add',data=json_entry)
+				requests.post(postgresHost + '/review/add',data=json_entry)
 
 			#insert a user
 			elif randInsert < 0.9:
-				numUsers = numUsers + 1
+				parser.set('migration','numUserAdds',str(numUserAdds + 1))
 				json_entry = generateUser()
 				requestAdds.write('/user/add, ' + json_entry + '\n')
-				requests.post('http://localhost:80/user/add',data=json_entry)
-				requests.post('http://localhost:5000/user/add',data=json_entry)
+				requests.post(mongoHost + '/user/add',data=json_entry)
+				requests.post(postgresHost + '/user/add',data=json_entry)
 
 			#insert a business
 			else:
-				numBusinesses = numBusinesses + 1
+				parser.set('migration','numBusinessAdds',str(numBusinessAdds + 1))
 				json_entry = generateBusiness()
 				requestAdds.write('/business/add, ' + json_entry + '\n')
-				requests.post('http://localhost:80/business/add',data=json_entry)
-				requests.post('http://localhost:5000/business/add',data=json_entry)
+				requests.post(mongoHost + '/business/add',data=json_entry)
+				requests.post(postgresHost + '/business/add',data=json_entry)
 
 		#update
 		elif randRequest < 0.7:
@@ -148,31 +152,31 @@ with open ('requestAdds.txt', 'a') as requestAdds, open ('review_ids.csv', 'r') 
 			if randUpdate < 0.3:
 				json_entry = generateReview()
 				randReview = random.choice(reviewLines).strip().split(',')[1]
-				updateLog = 'update, ' + randReview + ', /review/update/' + randReview + ', ' + json_entry + '\n'
+				updateLog = 'update, ' + randReview + ', review, ' + json_entry + '\n'
 				requestUpdatesDeletes.write(updateLog)
-				requests.put('http://localhost:5000/review/update/' + randReview,data=json_entry)
+				requests.put(mongoHost + '/review/update/' + randReview,data=json_entry)
 				if migrationComplete == 'True':
-					requests.put('http://localhost:80/review/update/' + randReview,data=json_entry)
+					requests.put(postgresHost + '/review/update/' + randReview,data=json_entry)
 
 			#update a user
 			elif randUpdate < 0.7:
 				json_entry = generateUser()
 				randUser = random.choice(userLines).strip().split(',')[1]
-				updateLog = 'update, ' + randUser + ', /user/update/' + randUser + ', ' + json_entry + '\n'
+				updateLog = 'update, ' + randUser + ', user, ' + json_entry + '\n'
 				requestUpdatesDeletes.write(updateLog)
-				requests.put('http://localhost:5000/user/update/' + randUser,data=json_entry)
+				requests.put(mongoHost + '/user/update/' + randUser,data=json_entry)
 				if migrationComplete == 'True':
-					requests.put('http://localhost:80/user/update/' + randUser,data=json_entry)
+					requests.put(postgresHost + '/user/update/' + randUser,data=json_entry)
 
 			#update a business
 			else:
 				json_entry = generateBusiness()
 				randBusiness = random.choice(businessLines).strip()
-				updateLog = 'update, ' + randBusiness + ', /business/update/' + randBusiness + ', ' + json_entry + '\n'
+				updateLog = 'update, ' + randBusiness + ', business, ' + json_entry + '\n'
 				requestUpdatesDeletes.write(updateLog)
-				requests.put('http://localhost:5000/business/update/' + randBusiness,data=json_entry)
+				requests.put(mongoHost + '/business/update/' + randBusiness,data=json_entry)
 				if migrationComplete == 'True':
-					requests.put('http://localhost:80/business/update/' + randBusiness,data=json_entry)
+					requests.put(postgresHost + '/business/update/' + randBusiness,data=json_entry)
 		#delete
 		elif randRequest < 1:
 			#delete from random table
@@ -181,32 +185,29 @@ with open ('requestAdds.txt', 'a') as requestAdds, open ('review_ids.csv', 'r') 
 			#delete a review
 			if randDelete < 0.3:
 				randReview = random.choice(reviewLines).strip().split(',')[1]
-				deleteLog = 'delete, ' + randReview + ', /review/delete/' + randReview + ', ' + '\n'
+				deleteLog = 'delete, ' + randReview + ', review' + '\n'
 				requestUpdatesDeletes.write(deleteLog)
-				requests.delete('http://localhost:5000/review/delete/' + randReview)
+				requests.delete(mongoHost + '/review/delete/' + randReview)
 				if migrationComplete == 'True':
-					requests.delete('http://localhost:80/review/delete/' + randReview)
+					requests.delete(postgresHost + '/review/delete/' + randReview)
 
 			#delete a user
 			elif randDelete < 0.7:
 				randUser = random.choice(userLines).strip().split(',')[1]
-				deleteLog = 'delete, ' + randUser + ', /user/delete/' + randUser + ', ' + '\n'
+				deleteLog = 'delete, ' + randUser + ', user' + '\n'
 				requestUpdatesDeletes.write(deleteLog)
-				requests.delete('http://localhost:5000/user/delete/' + randUser)
+				requests.delete(mongoHost + '/user/delete/' + randUser)
 				if migrationComplete == 'True':
-					requests.delete('http://localhost:80/user/delete/' + randUser)
+					requests.delete(postgresHost + '/user/delete/' + randUser)
 
 			#delete a business
 			else:
 				randBusiness = random.choice(businessLines).strip()
-				deleteLog = 'delete, ' + randBusiness + ', /business/delete/' + randBusiness + ', ' + '\n'
+				deleteLog = 'delete, ' + randBusiness + ', business' + '\n'
 				requestUpdatesDeletes.write(deleteLog)
-				requests.delete('http://localhost:5000/business/delete/' + randBusiness)
+				requests.delete(mongoHost + '/business/delete/' + randBusiness)
 				if migrationComplete == 'True':
-					requests.delete('http://localhost:80/business/delete/' + randBusiness)
+					requests.delete(postgresHost + '/business/delete/' + randBusiness)
 		requestUpdatesDeletes.close()
-
-	print("new businesses: ", numBusinessAdds)
-	print("new Reviews: ", numReviewAdds)
-	print("new Users: ", numUserAdds)
-	print("new Tips: ", numTipAdds)
+		with open('/home/ec2-user/migration/Migration/config.ini','w+') as configFile:
+			parser.write(configFile)

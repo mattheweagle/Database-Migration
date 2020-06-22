@@ -19,7 +19,6 @@ class BusinessMigration(Resource):
 		businesses = mongo.db.businesses
 		output = []
 		startingBusinessSize = int(parser.get('sizes','businessSize'))
-		print(startingBusinessSize)
 		if startingBusinessSize < (pageNum-1)*pageSize:
 			return "End of collection reached", 400
 		#within one page of reaching the end. different limit needed so entries that
@@ -143,4 +142,6 @@ class UpdateConfig(Resource):
 		parser.set('sizes','userSize',str(users.count()))
 		parser.set('sizes','reviewSize',str(reviews.count()))
 		parser.set('sizes','checkinSize',str(checkins.count()))
+		with open('/home/ec2-user/migration/MongoFlask/calls/config.ini','w+') as configFile:
+			parser.write(configFile)
 		return {}

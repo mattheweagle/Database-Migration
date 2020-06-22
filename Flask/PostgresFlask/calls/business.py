@@ -19,7 +19,7 @@ class GetBusiness(Resource):
 				"city": business.city,
 				"deleted": business.deleted,
 				"hours": business.hours,
-				"is_open": business.is_open,
+				"is_open": int(business.is_open),
 				"latitude": float(business.latitude),
 				"longitude": float(business.longitude),
 				"name": business.business_name,

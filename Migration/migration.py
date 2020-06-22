@@ -70,7 +70,7 @@ def MigrateReviews(pageNum):
 		p = requests.post('http://localhost:80/migration/review',data=json.dumps(g.text))
 		print(time.time() - t1)
 		pageNum = pageNum + 1
-	MigrateUser(0)
+	MigrateUsers(0)
 
 #migrate users
 def MigrateUsers(pageNum):
@@ -116,6 +116,7 @@ def MigrateTips(pageNum):
 		pageNum = pageNum + 1
 
 with open ('migrationLog.txt', 'rw') as migrationLog:
+	timeStart = time.time()
 	#check the last line in the migration log to see what collection and page the script left off at
 	#restart script from the correct page
 	lastStep = []
@@ -139,3 +140,5 @@ with open ('migrationLog.txt', 'rw') as migrationLog:
 		MigrateTips(lastStep[1])
 	elif lastStep[0] == 'user':
 		MigrateUsers(lastStep[1])
+	print('Total migration time: ')
+	print(time.time() - timeStart)
